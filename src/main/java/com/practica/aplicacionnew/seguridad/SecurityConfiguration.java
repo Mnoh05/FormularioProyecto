@@ -52,15 +52,16 @@ public class SecurityConfiguration{
     }
 
     protected void configure(HttpSecurity http ) throws Exception {
-        http.authorizeHttpRequests(rQ -> { rQ.requestMatchers("/registro**","/js/**", "/css/**","/img/**" ).permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .formLogin()
-                .loginPage("/login")
-                .and()
-                .logout()
-                .invalidateHttpSession(true)
-                .clearAuthentication(true)
-                .logoutRequestMatcher(new AntPathRequestMatcher("logout"));});
+        http.authorizeHttpRequests(rQ ->  rQ.requestMatchers("/registro**","/js/**", "/css/**","/img/**" ).permitAll()
+                .anyRequest().authenticated())
+                .formLogin(formLogin-> formLogin
+                        .loginPage("login")
+                        .permitAll()
+                ).logout(logout -> logout.logoutUrl("/logout")
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .logoutRequestMatcher(new AntPathRequestMatcher("logout"))
+                        .logoutSuccessUrl("login?logout")
+                        .permitAll());
     }
 }
